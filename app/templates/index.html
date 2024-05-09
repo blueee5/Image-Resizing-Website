@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Resizer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Image Resizer</h1>
+    <form action="/resize" method="post" enctype="multipart/form-data" id="resizeForm">
+        <label for="fileInput" class="custom-file-upload">
+            Choose Image
+            <input type="file" name="file" id="fileInput" accept="image/*" required>
+        </label>
+        <label for="size">Choose Size:</label>
+        <input type="number" name="size" id="size" required>
+        <button type="submit">Resize</button>
+    </form>
+    <div id="imagePreview" class="hidden">
+        <p>Image Preview:</p>
+        <img id="preview" alt="Preview">
+    </div>
+    {% if resized %}
+        <p>Image resized successfully! Download your <a href="{{ url_for('download', filename=filename) }}" download>resized image</a>.</p>
+    {% endif %}
+
+    <script>
+        // JavaScript for image preview
+        document.getElementById('fileInput').addEventListener('change', function (e) {
+            const fileInput = e.target;
+            const preview = document.getElementById('preview');
+            const imagePreview = document.getElementById('imagePreview');
+
+            if (fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    preview.src = e.target.result;
+                    imagePreview.classList.remove('hidden');
+                };
+
+                reader.readAsDataURL(fileInput.files[0]);
+            }
+        });
+    </script>
+</body>
+</html>
